@@ -1,43 +1,75 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   ImageBackground,
   TextInput,
+  Image,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Entypo from 'react-native-vector-icons/Entypo';
 import LinearGradient from 'react-native-linear-gradient';
+import * as firebase from 'firebase';
+import {useDispatch} from 'react-redux';
+import {LoginAct} from '../actions/LoginAct';
 
 export default function Login({navigation}) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const dispetch = useDispatch();
+  const signIn = (email, password) => {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        navigation.replace('TabNavig');
+        const id = firebase.auth().currentUser.uid;
+
+        setEmail('');
+
+        setPassword('');
+        firebase
+          .database()
+          .ref('users-data' + id)
+          .once('value')
+          .then(function (datasnape) {
+            const userName = datasnape.val().name;
+            const userPhoneNumber = datasnape.val().PhoneNumber;
+            dispetch(LoginAct({userName, userPhoneNumber}));
+            console.log(userName, userPhoneNumber, 'name');
+            console.log(datasnape.val());
+          });
+      })
+      .catch((error) => {
+        Alert.alert(error.message);
+      });
+  };
   return (
     <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
       <View
         style={{
           flex: 1,
           alignItems: 'center',
-          backgroundColor: 'rgb(243, 243, 243)',
-          justifyContent: 'space-between',
         }}>
-        <View
+        <ImageBackground
+          source={require('../images/loginImg.png')}
+          imageStyle={{width: '100%', height: 300}}
           style={{
-            height: 200,
-            width: '100%',
+            flex: 3,
+            width: 500,
+            alignSelf: 'center',
             alignItems: 'center',
+            justifyContent: 'center',
           }}>
-          <ImageBackground
-            source={require('../images/loginImg.png')}
-            style={{
-              height: 220,
-              width: 500,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Fontisto name="credit-card" color="red" size={50} />
-          </ImageBackground>
-        </View>
+          <Image
+            style={{marginRight: 20}}
+            source={require('../images/SigninLogo.png')}
+          />
+        </ImageBackground>
+
         <View
           style={{
             backgroundColor: 'white',
@@ -73,6 +105,7 @@ export default function Login({navigation}) {
               placeholder="Enter your bank ID"
               autoFocus={true}
               style={{borderBottomWidth: 1, borderColor: 'gray'}}
+              onChangeText={(e) => setEmail(e)}
             />
             <Text
               style={{
@@ -86,8 +119,9 @@ export default function Login({navigation}) {
             </Text>
             <TextInput
               placeholder="******"
-              // focusable={true}
               style={{borderBottomWidth: 1, borderColor: 'gray'}}
+              onChangeText={(e) => setPassword(e)}
+              secureTextEntry={true}
             />
           </View>
           <LinearGradient
@@ -108,7 +142,8 @@ export default function Login({navigation}) {
             }}>
             <TouchableOpacity
               style={{width: '100%', alignItems: 'center'}}
-              onPress={() => navigation.navigate('ForgotPassword')}>
+              onPress={() => navigation.navigate('TabNavig')}
+              onPress={() => signIn(email, password)}>
               <View
                 style={{
                   flexDirection: 'row',

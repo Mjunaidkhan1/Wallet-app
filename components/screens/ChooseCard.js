@@ -4,8 +4,12 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Swiper from 'react-native-swiper';
 import LinearGradient from 'react-native-linear-gradient';
+import {useDispatch, useSelector} from 'react-redux';
 
 const ChooseCard = () => {
+  const {loginData} = useSelector((state) => state.LoginRed);
+  // console.log(loginData, 'data');
+  // console.log(loginData[0].userPhoneNumber, 'dat');
   return (
     <View style={{flex: 1}}>
       <View
@@ -54,7 +58,7 @@ const ChooseCard = () => {
 
                     color: 'rgb(154, 154, 155)',
                   }}>
-                  zidane petrick doe!
+                  {loginData[0].userName}
                 </Text>
               </View>
             </View>

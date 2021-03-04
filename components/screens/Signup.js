@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -11,8 +11,60 @@ import {
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import LinearGradient from 'react-native-linear-gradient';
+import * as firebase from 'firebase';
+import {useDispatch} from 'react-redux';
+import {LoginAct} from '../actions/LoginAct';
 
-const Signup = ({navigation}) => {
+function Signup({navigation}) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [PhoneNumber, setPhoneNumber] = useState('');
+  const dispetch = useDispatch();
+
+  // componentDidMount() {
+  // const myitem = firebase.database().ref('users');
+  // myitem.on('value', (datasnape) => {
+  //   console.log(datasnape.val());
+  // });
+  // }
+
+  const SingUP = (email, password) => {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        navigation.replace('Login');
+        const id = firebase.auth().currentUser.uid;
+        const usrData = firebase.database().ref('users-data' + id);
+        usrData.set({
+          name: name,
+          PhoneNumber: PhoneNumber,
+        });
+        setEmail('');
+        setName('');
+        setPassword('');
+        setPhoneNumber('');
+        Alert.alert('sign up sucsessfully');
+
+        firebase
+          .database()
+          .ref('users-data' + id)
+          .once('value')
+          .then(function (datasnape) {
+            const userName = datasnape.val().name;
+            const userPhoneNumber = datasnape.val().PhoneNumber;
+            dispetch(LoginAct({userName, userPhoneNumber}));
+            // console.log(a, b, 'name');
+            // console.log(datasnape.val());
+          });
+      })
+      .catch((error) => {
+        Alert.alert(error.message);
+      });
+    // const id = firebase.auth().currentUser.uid;
+  };
+
   return (
     <KeyboardAvoidingView style={{flex: 1}} behavior="">
       <View style={{flex: 1}}>
@@ -80,8 +132,9 @@ const Signup = ({navigation}) => {
                   // marginLeft: 10,
                   // backgroundColor: 'green',
                 }}
-                placeholder="Firstname Lirstname"
+                placeholder="Full Name"
                 placeholderTextColor="black"
+                onChangeText={(e) => setName(e)}
               />
             </View>
             <View
@@ -104,10 +157,10 @@ const Signup = ({navigation}) => {
                 style={{
                   fontSize: 25,
                   width: 250,
-                  // marginLeft: 10,
-                  // backgroundColor: 'green',
                 }}
+                value={email}
                 placeholder="Email"
+                onChangeText={(e) => setEmail(e)}
                 placeholderTextColor="black"
               />
             </View>
@@ -133,7 +186,10 @@ const Signup = ({navigation}) => {
                   fontSize: 25,
                   width: 250,
                 }}
+                value={password}
                 placeholder="Password"
+                secureTextEntry={true}
+                onChangeText={(e) => setPassword(e)}
                 placeholderTextColor="black"
               />
             </View>
@@ -171,6 +227,7 @@ const Signup = ({navigation}) => {
                   borderWidth: 1,
                 }}
                 placeholder="Phone Number"
+                onChangeText={(e) => setPhoneNumber(e)}
               />
             </View>
 
@@ -200,7 +257,7 @@ const Signup = ({navigation}) => {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}
-                onPress={() => navigation.navigate('Login')}>
+                onPress={() => SingUP(email, password)}>
                 <Text
                   style={{
                     width: '60%',
@@ -227,6 +284,6 @@ const Signup = ({navigation}) => {
       </View>
     </KeyboardAvoidingView>
   );
-};
+}
 
 export default Signup;
