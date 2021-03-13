@@ -10,6 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import LinearGradient from 'react-native-linear-gradient';
 import * as firebase from 'firebase';
@@ -73,8 +74,8 @@ export default function Login({navigation}) {
         <View
           style={{
             backgroundColor: 'white',
-            marginBottom: 20,
-            height: 400,
+            // marginBottom: 20,
+
             width: '90%',
             borderRadius: 20,
           }}>
@@ -94,7 +95,7 @@ export default function Login({navigation}) {
             <Text
               style={{
                 fontSize: 20,
-                fontWeight: 'bold',
+                // fontWeight: 'bold',
                 textTransform: 'uppercase',
                 color: 'gray',
                 marginTop: 20,
@@ -110,7 +111,7 @@ export default function Login({navigation}) {
             <Text
               style={{
                 fontSize: 20,
-                fontWeight: 'bold',
+                // fontWeight: 'bold',
                 textTransform: 'uppercase',
                 color: 'gray',
                 marginTop: 20,
@@ -123,6 +124,63 @@ export default function Login({navigation}) {
               onChangeText={(e) => setPassword(e)}
               secureTextEntry={true}
             />
+          </View>
+          <View
+            style={{
+              marginHorizontal: 20,
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: 10,
+            }}>
+            <View
+              style={{
+                height: 15,
+                width: 15,
+                borderWidth: 1,
+                borderRadius: 20,
+                borderColor: 'rgb(187, 189, 190)',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <FontAwesome
+                name="check"
+                // style={{paddingTop: 5, paddingLeft: 5}}
+                color="rgb(65, 212, 241)"
+                size={10}
+              />
+            </View>
+            <Text style={{paddingLeft: 20, color: 'rgb(187, 189, 190)'}}>
+              Remember my ID for future logins
+            </Text>
+          </View>
+
+          <View
+            style={{
+              marginHorizontal: 20,
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: 10,
+            }}>
+            <View
+              style={{
+                height: 15,
+                width: 15,
+                borderWidth: 1,
+                borderRadius: 20,
+                borderColor: 'rgb(187, 189, 190)',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <FontAwesome
+                name="check"
+                // style={{paddingTop: 5, paddingLeft: 5}}
+                color="rgb(65, 212, 241)"
+                size={10}
+              />
+            </View>
+            <Text style={{paddingLeft: 20, color: 'rgb(187, 189, 190)'}}>
+              use fingerprint recognition next time
+            </Text>
           </View>
           <LinearGradient
             colors={['rgb(31, 137, 177)', 'rgb(50, 242, 197)']}

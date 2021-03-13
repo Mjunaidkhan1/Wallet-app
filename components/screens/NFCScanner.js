@@ -1,104 +1,122 @@
-import React from 'react';
-import {View, Text, TouchableOpacity, Platform} from 'react-native';
-import NfcManager, {NfcEvents} from 'react-native-nfc-manager';
+import React, {useEffect} from 'react';
+import {Image, Text, View, Modal, TouchableOpacity} from 'react-native';
+import NfcManager, {NfcEvents, NfcTech, Ndef} from 'react-native-nfc-manager';
 
-class NFCScanner extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      supported: false,
-    };
-  }
-  componentDidMount() {
-    // console.log('props scanpage');
-    // await NfcManager.start();
-    NfcManager.isSupported().then((supported) => {
-      console.log(supported, 'sss');
-      this.setState({supported});
-      if (supported) {
-        this._startNfc();
-      }
+function AppV2(props) {
+  const [visible, setVisible] = React.useState(false);
+
+  useEffect(() => {
+    NfcManager.start();
+    NfcManager.setEventListener(NfcEvents.DiscoverTag, (tag) => {
+      console.warn('tag', tag);
+      NfcManager.setAlertMessageIOS('I got your tag!');
+      NfcManager.unregisterTagEvent().catch(() => 0);
     });
-  }
+  }, []);
 
-  _startNfc() {
-    NfcManager.start({
-      onSessionClosedAndroid: () => {
-        console.log('ios session closed');
-      },
-    })
-      .then((result) => {
-        console.log(result, 'result');
-        this.setState({nfcSupport: true});
-      })
-      .catch((err) => {
-        this.setState({nfcSupport: false});
-      });
-    if (Platform.OS === 'android') {
-      NfcManager.registerTagEvent(
-        (tag) => {
-          console.log('Tag Discovered', tag);
-        },
-        'Hold your device over the tag',
-        true,
-      );
-      NfcManager.isEnabled()
-        .then((enabled) => {
-          console.log(enabled, 'enabled');
-          this.setState({
-            nfcSupport: enabled ? true : false,
-            nfcAllow: enabled ? true : false,
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+  const cancel = () => {
+    NfcManager.unregisterTagEvent().catch(() => 0);
+
+    setVisible(false);
+  };
+
+  const _test = async () => {
+    setVisible(true);
+    let tag = null;
+    try {
+      await NfcManager.requestTechnology([NfcTech.Ndef]);
+
+      tag = await NfcManager.getTag();
+      tag.ndefStatus = await NfcManager.ndefHandler.getNdefStatus();
+    } catch (ex) {
+      console.warn(ex);
     }
-  }
 
-  render() {
-    return (
-      <View style={{padding: 20}}>
-        <Text>NFC Demo</Text>
+    NfcManager.cancelTechnologyRequest().catch(() => 0);
+    return tag;
+  };
+
+  return (
+    <View
+      style={{
+        flex: 1,
+
+        backgroundColor: 'rgb(205, 205, 205)',
+      }}>
+      <View
+        style={{
+          flex: 5,
+
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+        }}>
+        <Image
+          source={require('../images/nfcImg.png')}
+          style={{width: 120, height: 120}}
+          resizeMode="contain"
+        />
+
         <TouchableOpacity
           style={{
             padding: 10,
             width: 200,
             margin: 20,
             borderWidth: 1,
-            borderColor: 'black',
+            alignItems: 'center',
+            borderColor: 'gray',
+            borderRadius: 20,
           }}
-          onPress={this._test}>
-          <Text>Test</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={{
-            padding: 10,
-            width: 200,
-            margin: 20,
-            borderWidth: 1,
-            borderColor: 'black',
-          }}
-          onPress={this._cancel}>
-          <Text>Cancel Test</Text>
+          onPress={_test}>
+          <Text>Scann NFC</Text>
         </TouchableOpacity>
       </View>
-    );
-  }
+      <View style={{flex: 5}}></View>
+      <Modal transparent={true} visible={visible}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              height: 300,
+              width: '90%',
+              borderRadius: 20,
+              marginBottom: 20,
+            }}>
+            <View style={{marginTop: 20, alignItems: 'center'}}>
+              <Image
+                source={require('../images/nfcImg.png')}
+                style={{width: 120, height: 120, marginTop: 20}}
+                resizeMode="contain"
+              />
 
-  _cancel = () => {
-    NfcManager.unregisterTagEvent().catch(() => 0);
-  };
+              <Text style={{marginTop: 20, fontSize: 20}}>
+                Please tap your NFC tag
+              </Text>
 
-  _test = async () => {
-    try {
-      await NfcManager.registerTagEvent();
-    } catch (ex) {
-      console.warn('ex', ex);
-      NfcManager.unregisterTagEvent().catch(() => 0);
-    }
-  };
+              <TouchableOpacity
+                style={{
+                  marginTop: 30,
+                  alignItems: 'center',
+
+                  width: '60%',
+                  borderWidth: 1,
+                  borderColor: 'gray',
+                  borderRadius: 30,
+                }}
+                onPress={cancel}>
+                <Text style={{padding: 10}}>CANCEL</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
+  // }
 }
 
-export default NFCScanner;
+export default AppV2;

@@ -21,6 +21,7 @@ import ChooseCard from './screens/ChooseCard';
 import WeeklyReportt from './screens/WeeklyReportt';
 import {createStackNavigator} from '@react-navigation/stack';
 import NFCScanner from './screens/NFCScanner';
+import Finger from './screens/Finger';
 
 const Tab = createBottomTabNavigator();
 
@@ -37,8 +38,8 @@ function TabNavig() {
           padding: 0,
         },
       }}>
-      {/* <Tab.Screen name="a" component={FingerPrint} /> */}
-      {/* <Tab.Screen name="b" component={Login} /> */}
+      <Tab.Screen name="a" component={Finger} />
+      <Tab.Screen name="b" component={NFCScanner} />
       <Tab.Screen name="o" component={ChooseCard} />
       <Tab.Screen name="c" component={Reports} />
       <Tab.Screen name="d" component={Recipt} />
@@ -59,7 +60,7 @@ function TabNavig() {
 const Stack = createStackNavigator();
 const StackNav = () => {
   return (
-    // <Login />
+    // <Finger />
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen

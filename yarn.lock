@@ -6119,6 +6119,11 @@
   "resolved" "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz"
   "version" "16.13.1"
 
+"react-native-fingerprint-scanner@^6.0.0":
+  "integrity" "sha512-8VoKSA0Z0kWnIni96yABZfUUzfmWFXQEXcELwWr1CNLloPt3WoPptYb/6pGsBcH0YxSsW3X4+C8tl0clgyBsvA=="
+  "resolved" "https://registry.npmjs.org/react-native-fingerprint-scanner/-/react-native-fingerprint-scanner-6.0.0.tgz"
+  "version" "6.0.0"
+
 "react-native-gesture-handler@^1.10.1", "react-native-gesture-handler@>= 1.0.0":
   "integrity" "sha512-sDo6T0m+izIDczsIzE63nAqEG3BE/OwkCJoU4/qjdo7ryem7D0Rj/Y+SlAZP2lVAhllo65LDRYqd6SBe4y19Mg=="
   "resolved" "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-1.10.1.tgz"
@@ -6196,7 +6201,7 @@
     "prop-types" "^15.7.2"
     "yargs" "^16.1.1"
 
-"react-native@*", "react-native@>=0.40.0", "react-native@>=0.42.0", "react-native@>=0.55", "react-native@>=0.57", "react-native@>=0.62.0-rc.0 <0.64.0", "react-native@0.63.4":
+"react-native@*", "react-native@>=0.40.0", "react-native@>=0.42.0", "react-native@>=0.55", "react-native@>=0.57", "react-native@>=0.60 <1.0.0", "react-native@>=0.62.0-rc.0 <0.64.0", "react-native@0.63.4":
   "integrity" "sha512-I4kM8kYO2mWEYUFITMcpRulcy4/jd+j9T6PbIzR0FuMcz/xwd+JwHoLPa1HmCesvR1RDOw9o4D+OFLwuXXfmGw=="
   "resolved" "https://registry.yarnpkg.com/react-native/-/react-native-0.63.4.tgz"
   "version" "0.63.4"
